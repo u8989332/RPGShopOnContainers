@@ -1,4 +1,5 @@
 ﻿using CatalogApi.Domain;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace CatalogApi.Data
     {
         public static async Task SeedAsync(CatalogContext context)
         {
+            context.Database.Migrate();
             if (!context.CatalogTypes.Any())
             {
                 context.CatalogTypes.AddRange(GetDefaultCatalogTypes());

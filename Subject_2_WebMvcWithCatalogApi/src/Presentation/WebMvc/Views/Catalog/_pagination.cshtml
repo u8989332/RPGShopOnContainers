@@ -1,0 +1,33 @@
+﻿@model WebMvc.ViewModels.PaginationInfo
+
+<div class="row">
+    <span>
+        Showing @Model.ItemsPerPage of @Model.TotalItems products - Page @(Model.ActualPage + 1) - @Model.TotalPages
+    </span>
+</div>
+<div class="row">
+    <ul class="pagination alg-right-pad">
+        <li>
+            <a class="@Model.Previous"
+               id="Previous"
+               asp-controller="Catalog"
+               asp-action="Index"
+               asp-route-page="@(Model.ActualPage - 1)"
+               asp-route-typesFilterApplied="@(ViewBag.TypesFilterApplied)"
+               aria-label="Previous">
+                Previous
+            </a>
+        </li>
+        <li>
+            <a class="@Model.Next"
+               id="Next"
+               asp-controller="Catalog"
+               asp-action="Index"
+               asp-route-page="@(Model.ActualPage + 1)"
+               asp-route-typesFilterApplied="@(ViewBag.TypesFilterApplied)"
+               aria-label="Next">
+                Next
+            </a>
+        </li>
+    </ul>
+</div>

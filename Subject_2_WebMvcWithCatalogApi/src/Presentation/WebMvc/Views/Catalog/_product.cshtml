@@ -1,0 +1,19 @@
+﻿@model WebMvc.Models.CatalogItem
+<form asp-controller="Cart" asp-action="AddToCart">
+    <div class="col-md-6 text-center col-sm-6 col-xs-6">
+        <section class="nes-container with-title">
+            <h3><a href="#">@Model.Name</a></h3>
+            <img src="@Model.PictureUrl" style="width: 100%" alt="" />
+            <div class="caption"></div>
+            <p>Price : <strong>@Model.Price.ToString("N2")</strong></p>
+            <p>
+                <input type="submit" href="#" class="nes-btn is-success" value="Add To Cart" />
+            </p>
+        </section>
+    </div>
+    <input type="hidden" asp-for="@Model.Description" name="description" />
+    <input type="hidden" asp-for="@Model.Id" name="id" />
+    <input type="hidden" asp-for="@Model.Name" name="name" />
+    <input type="hidden" asp-for="@Model.PictureUrl" name="pictureUrl" />
+    <input type="hidden" asp-for="@Model.Price" name="price" />
+</form>

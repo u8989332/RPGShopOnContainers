@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewData["Title"] = "Catalog";
+    @model WebMvc.ViewModels.CatalogIndexViewModel
+}
+
+<form asp-action="Index" asp-controller="Catalog" method="post">
+    <div class="row">
+        <div class="col-md-3">
+            <section class="nes-container with-title">
+                <h3 class="title">Types</h3>
+                <div id="lists" class="item">
+                    <div class="nes-select">
+                        <select asp-for="@Model.TypesFilterApplied" asp-items="@Model.Types"></select>
+                    </div>
+                    <button type="submit" class="nes-btn is-primary">Search</button>
+                </div>
+            </section>
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+            <div class="row">
+                @if (Model.CatalogItems.Count() > 0)
+                {
+                    <div class="row">
+                        @foreach (var catalogItem in Model.CatalogItems)
+                        {
+                            <partial name="_product" model="catalogItem" />
+                        }
+                    </div>
+                    <partial name="_pagination" model="Model.PaginationInfo" />
+                }
+                else
+                {
+                    <div class="row">
+                        No any product.
+                    </div>
+                }
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</form>

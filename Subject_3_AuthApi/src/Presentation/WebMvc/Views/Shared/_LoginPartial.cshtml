@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@if (User?.Identity?.IsAuthenticated == true)
+{
+    <li>
+        @User.FindFirst(x => x.Type == "preferred_username").Value
+    </li>
+    <li class="pull-right">
+        <form asp-area="" asp-controller="Account" asp-action="SignOut" method="post" id="logoutForm">
+            <a href="javascript:document.getElementById('logoutForm').submit()">
+                Log Out
+            </a>
+        </form>
+    </li>
+}
+else
+{
+    <li>
+        <a asp-area="" asp-controller="Account" asp-action="SignIn">
+            Login
+        </a>
+    </li>
+}

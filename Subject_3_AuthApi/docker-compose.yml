@@ -1,0 +1,79 @@
+﻿version: "3.4"
+
+networks:
+   frontend:
+   backend:
+   
+services:
+   webmvc:
+      build:
+         context: .\src\Presentation\WebMvc
+         dockerfile: Dockerfile
+      environment:
+         - CatalogUrl=http://catalog
+         - IdentityUrl=https://${RPGSHOP_EXTERNAL_DNS_NAME_OR_IP}:7101
+         - CallBackUrl=http://${RPGSHOP_EXTERNAL_DNS_NAME_OR_IP}:7500/
+      container_name: rpgwebmvc
+      ports:
+         - "7500:80"
+      networks:
+         - frontend
+      depends_on:
+         - catalog
+         - auth
+
+   catalog:
+      build:
+         context: .\src\Services\CatalogApi
+         dockerfile: Dockerfile
+      image: rpgshop/catalog
+      environment:
+         - DatabaseServer=mssqlserver
+         - DatabaseName=CatalogDb
+         - DatabaseUser=sa
+         - DatabasePassword=JustTest!
+         - ExternalCatalogBaseUrl=http://${RPGSHOP_EXTERNAL_DNS_NAME_OR_IP}:7000
+      container_name: rpgcatalogapi
+      ports:
+         - "7000:80"
+      networks:
+         - backend
+         - frontend
+      depends_on:
+         - mssqlserver
+
+   auth:
+      build:
+         context: .\src\Services\AuthApi
+         dockerfile: Dockerfile
+      image: rpgshop/auth
+      environment:
+         - MvcClient=http://${RPGSHOP_EXTERNAL_DNS_NAME_OR_IP}:7500
+         - DatabaseServer=mssqlserver
+         - DatabaseName=AuthDb
+         - DatabaseUser=sa
+         - DatabasePassword=JustTest!
+         - ExternalCatalogBaseUrl=http://${RPGSHOP_EXTERNAL_DNS_NAME_OR_IP}:7000
+         - ASPNETCORE_URLS=http://+:80;https://+:443
+         - ASPNETCORE_Kestrel__Certificates__Default__Password=crypticpassword
+         - ASPNETCORE_Kestrel__Certificates__Default__Path=./AuthApi.pfx
+      container_name: rpgauthapi
+      ports:
+         - "7100:80"
+         - "7101:443"
+      networks:
+         - backend
+         - frontend
+      depends_on:
+         - mssqlserver
+
+   mssqlserver:
+      image: "microsoft/mssql-server-linux:latest"
+      ports:
+         - "1445:1433"
+      container_name: rpgmssqlcontainer
+      environment:
+         - ACCEPT_EULA=Y
+         - SA_PASSWORD=JustTest!
+      networks:
+         - backend
